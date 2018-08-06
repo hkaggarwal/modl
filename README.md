@@ -36,11 +36,13 @@ Please ensure to keep the dataset in the same directory as `tstDemo.py` file or 
 #### Files description
 The folder `TFmodels` contain the learned tensorflow model parameters. `tstDemo.py` will use it to read the model and run on the `dataset` downloadable from the above link.
 
+`supportingFunctions.py`: This file contain some supporting functions to calculate the time, PSNR, and read the dataset.
 
 #### Training Code
 To be uploaded soon
 
 #### Testing Code
+`tstDemo.py` : This file contains the comments
 
 #### Contact
 The code is provided to support reproducible research. It may not be robust enough to work directly on your particular configuration of python. If the code is not working or some files are missing then
