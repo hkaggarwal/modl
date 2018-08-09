@@ -9,7 +9,7 @@ In the above paper, we propose a technique to combine the power of deep-learning
 
 This code solves the following optimization problem:
 
-    ** argmin_x ||Ax-b||_2^2 + ||x-Dw(x)||^2_2 **
+     argmin_x ||Ax-b||_2^2 + ||x-Dw(x)||^2_2 
 
  `A` can be any measurement operator. Here we consider parallel imaging problem in MRI where
  the `A` operator consists of undersampling mask, FFT, and coil sensitivity maps.
@@ -22,11 +22,11 @@ This code solves the following optimization problem:
 We have tested the code in Anaconda python 2.7 and 3.6. The code should work with Tensorflow-1.7 onwards.
 The dataset is in the hdf5 format. You may require to install hdf5 library in python. 
 In Anaconda you can give following command
-`conda install h5py'
+`conda install h5py`
 
 The training code requires tqdm library. It is a nice library that is helpful in tracking the training progress.
 It can be installed using:
-`conda install tqdm'
+`conda install tqdm`
 
 In addition, matplotlib is required to visualize the output images.
 
@@ -60,7 +60,7 @@ Second, just clone or download this reporsitory. The `tstDemo.py` file should ru
 On the command prompt `CD` to this `modl` directory i.e. the directory containig `tstDemo.py`.
 Then you can run the test code using the command: 
 
-`$python tstDemo.py' from the command prompt. 
+`$python tstDemo.py` from the command prompt. 
 
 You will need the file `dataset.hdf5` to run the training code `trn.py`. You can download the dataset from the link provided above. Please ignore the future warning by python.
 
