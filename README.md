@@ -63,6 +63,8 @@ Then you can run the test code using the command:
 `$python tstDemo.py` from the command prompt. 
 
 You will need the file `dataset.hdf5` to run the training code `trn.py`. You can download the dataset from the link provided above. Please ignore the future warning by python.
+Output:
+![alt text](https://raw.githubusercontent.com/hkaggarwal/modl/master/outputImage.jpeg)
 
 #### Files description
 The folder `savedModels` contain the learned tensorflow model parameters. `tstDemo.py` will use it to read the model and run on the demo image in the file `demoImage.hdf5`. 
