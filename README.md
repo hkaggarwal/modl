@@ -1,17 +1,43 @@
 # MoDL
-MoDL: Model-Based Deep Learning Architecture for Inverse Problems
+MoDL: Model Based Deep Learning Architecture for Inverse Problems
 
 ### Reference paper: 
 Link: https://arxiv.org/abs/1712.02862
 
+#### What this code do:
+In the above paper, we propose a technique to combine the power of deep-learning with the model-based approaches. This code suggest how we can use a deep convolutional neural netwrok (CNN) as a regularizer to solve an optimization problem.
+
+This code solves the following optimization problem:
+
+    ** argmin_x ||Ax-b||_2^2 + ||x-Dw(x)||^2_2 **
+
+ `A` can be any measurement operator. Here we consider parallel imaging problem in MRI where
+ the `A` operator consists of undersampling mask, FFT, and coil sensitivity maps.
+
+`Dw(x)`: it represents the denoiser using a residual learning CNN.
+
+
 #### Dependencies
 
 We have tested the code in Anaconda python 2.7 and 3.6. The code should work with Tensorflow-1.7 onwards.
+The dataset is in the hdf5 format. You may require to install hdf5 library in python. 
+In Anaconda you can give following command
+`conda install h5py'
+
+The training code requires tqdm library. It is a nice library that is helpful in tracking the training progress.
+It can be installed using:
+`conda install tqdm'
+
+In addition, matplotlib is required to visualize the output images.
 
 #### Dataset
-We have released the parallel imaging dataset used in this paper. You can download the dataset from the below link:
 
- **Download Link** :  https://drive.google.com/file/d/1Z-P5UKGbfD0caq_AMX6UdfXYmPsFHdmD/view?usp=sharing
+This git repository also includes a single image in the file `demoImage.hdf5`. The testing script `tstDemo.py` will use this image by default and does not require full data download for the testing purpose.
+
+We have released the parallel imaging dataset used in this paper. You can download the full dataset from the below link:
+
+ **Download Link** :  https://drive.google.com/file/d/1qp-l9kJbRfQU1W5wCjOQZi7I3T6jwA37/view?usp=sharing
+
 
 This dataset consist of parallel magnetic resonance imaging (MRI) brain data of five human subjects. Four of which are used during training of the model and fifth subject is used during testing.
 Above link contain fully sampled preprocessed data in numpy format for both training and testing. We also provide coil-sensitity-maps (CSM) pre-computed using E-SPIRIT algorithm. Total file size is 3 GB and contains following arrays:
@@ -23,26 +49,31 @@ Above link contain fully sampled preprocessed data in numpy format for both trai
 
 `trnMask`: This is the random undersampling mask to do 6-fold acceleration. We use different mask for different slices.
 
-`tstOrg`,`tstCSM`, `tstMask`: These are similar arrays for testing purpose.
+`tstOrg`,`tstCSM`, `tstMask`: These are similar arrays for testing purpose. There are total 164 testing images.
 
+The undersampling mask, for both training and testing cases, is shared corresponding to 6-fold acceleration case. 
 
 #### How to run the code
 
 First, ensure that Tensorflow 1.7 or higher version is installed and working with GPU. 
-Second, you will need the `dataset` to run the code. You can download the dataset from the link provided above.
-Third, just clone or download this reporsitory. The `tstDemo.py` file should run without any changes in the code.
-Please ensure to keep the dataset in the same directory as `tstDemo.py` file or set the dataset path appropriately in the code.
+Second, just clone or download this reporsitory. The `tstDemo.py` file should run without any changes in the code.
+On the command prompt `CD` to this `modl` directory i.e. the directory containig `tstDemo.py`.
+Then you can run the test code using the command: 
+
+`$python tstDemo.py' from the command prompt. 
+
+You will need the file `dataset.hdf5` to run the training code `trn.py`. You can download the dataset from the link provided above. Please ignore the future warning by python.
 
 #### Files description
-The folder `TFmodels` contain the learned tensorflow model parameters. `tstDemo.py` will use it to read the model and run on the `dataset` downloadable from the above link.
+The folder `savedModels` contain the learned tensorflow model parameters. `tstDemo.py` will use it to read the model and run on the demo image in the file `demoImage.hdf5`. 
 
 `supportingFunctions.py`: This file contain some supporting functions to calculate the time, PSNR, and read the dataset.
 
-#### Training Code
-To be uploaded soon
+`model.py`: This file contain the code for creating the residual learning CNN model as well as the algorithm for 
+	      conjugate-gradient on complex data.
+`trn.py`: This is the training code
+`tstDemo.py`: This is the testing code
 
-#### Testing Code
-`tstDemo.py` : This file contains the comments
 
 #### Contact
 The code is provided to support reproducible research. It may not be robust enough to work directly on your particular configuration of python. If the code is not working or some files are missing then
