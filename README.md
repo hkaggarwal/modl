@@ -1,5 +1,5 @@
 # MoDL
-MoDL: Model Based Deep Learning Architecture for Inverse Problems
+MoDL: Model Based Deep Learning Architecture for Inverse Problems 
 
 ### Reference paper: 
 Link: https://arxiv.org/abs/1712.02862
@@ -62,9 +62,10 @@ Then you can run the test code using the command:
 
 `$python tstDemo.py` from the command prompt. 
 
-You will need the file `dataset.hdf5` to run the training code `trn.py`. You can download the dataset from the link provided above. Please ignore the future warning by python.
-Output:
+#### Output:
 ![alt text](https://raw.githubusercontent.com/hkaggarwal/modl/master/outputImage.jpeg)
+
+You will need the file `dataset.hdf5` to run the training code `trn.py`. You can download the dataset from the link provided above. Please ignore the future warning by python.
 
 #### Files description
 The folder `savedModels` contain the learned tensorflow model parameters. `tstDemo.py` will use it to read the model and run on the demo image in the file `demoImage.hdf5`. 
@@ -73,7 +74,9 @@ The folder `savedModels` contain the learned tensorflow model parameters. `tstDe
 
 `model.py`: This file contain the code for creating the residual learning CNN model as well as the algorithm for 
 	      conjugate-gradient on complex data.
+	      
 `trn.py`: This is the training code
+
 `tstDemo.py`: This is the testing code
 
 
