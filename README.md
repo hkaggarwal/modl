@@ -2,6 +2,9 @@
 MoDL: Model Based Deep Learning Architecture for Inverse Problems  by H.K. Aggarwal, M.P Mani, and Mathews Jacob in IEEE Transactions on Medical Imaging,  2018 (Accepted)
 
 ### Reference paper: 
+
+MoDL: Model Based Deep Learning Architecture for Inverse Problems  by H.K. Aggarwal, M.P Mani, and Mathews Jacob in IEEE Transactions on Medical Imaging,  2018 (Accepted)
+
 Link: https://arxiv.org/abs/1712.02862
 
 #### What this code do:
@@ -81,7 +84,6 @@ The folder `savedModels` contain the learned tensorflow model parameters. `tstDe
 
 
 #### Contact
-The code is provided to support reproducible research. It may not be robust enough to work directly on your particular configuration of python. If the code is not working or some files are missing then
-you may open an issue or directly email me at jnu.hemant@gmail.com
+The code is provided to support reproducible research. If the code is giving syntax error in your particular python configuration or some files are missing then you may open an issue or directly email me at jnu.hemant@gmail.com
 
 
