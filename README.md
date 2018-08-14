@@ -1,5 +1,5 @@
 # MoDL
-MoDL: Model Based Deep Learning Architecture for Inverse Problems 
+MoDL: Model Based Deep Learning Architecture for Inverse Problems  by H.K. Aggarwal, M.P Mani, and Mathews Jacob in IEEE Transactions on Medical Imaging,  2018 (Accepted)
 
 ### Reference paper: 
 Link: https://arxiv.org/abs/1712.02862
