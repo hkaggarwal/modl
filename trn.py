@@ -63,11 +63,11 @@ config.gpu_options.allow_growth=True
 
 #--------------------------------------------------------------
 #% SET THESE PARAMETERS CAREFULLY
-nLayers=5
-epochs=100
+nLayers=3
+epochs=5
 batchSize=4
 gradientMethod='AG'
-K=1
+K=2
 sigma=0.01
 
 #--------------------------------------------------------------------------
@@ -136,10 +136,11 @@ loss = tf.reduce_mean(tf.reduce_sum(tf.pow(predT-orgT, 2),axis=0))
 tf.summary.scalar('loss', loss)
 update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
 
-optimizer = tf.train.AdamOptimizer()
-gvs = optimizer.compute_gradients(loss)
-capped_gvs = [(tf.clip_by_value(grad, -1., 1.), var) for grad, var in gvs]
-opToRun=optimizer.apply_gradients(capped_gvs)
+with tf.name_scope('optimizer'):
+    optimizer = tf.train.AdamOptimizer()
+    gvs = optimizer.compute_gradients(loss)
+    capped_gvs = [(tf.clip_by_value(grad, -1., 1.), var) for grad, var in gvs]
+    opToRun=optimizer.apply_gradients(capped_gvs)
 
 
 #%% training code

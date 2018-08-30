@@ -179,18 +179,17 @@ def makeModel(atb,csm,mask,training,nLayers,K,gradientMethod):
     out={}
     out['dc0']=atb
     with tf.name_scope('myModel'):
-        for i in range(1,K+1):
-            j=str(i)
-            with tf.variable_scope('Wts'):
+        with tf.variable_scope('Wts',reuse=tf.AUTO_REUSE):
+            for i in range(1,K+1):
+                j=str(i)
                 out['dw'+j]=dw(out['dc'+str(i-1)],training,nLayers)
-
-            lam1=getLambda()
-            rhs=atb + lam1*out['dw'+j]
-            if gradientMethod=='AG':
-                out['dc'+j]=dc(rhs,csm,mask,lam1)
-            elif gradientMethod=='MG':
-                if training:
-                    out['dc'+j]=dcManualGradient(rhs)
-                else:
+                lam1=getLambda()
+                rhs=atb + lam1*out['dw'+j]
+                if gradientMethod=='AG':
                     out['dc'+j]=dc(rhs,csm,mask,lam1)
+                elif gradientMethod=='MG':
+                    if training:
+                        out['dc'+j]=dcManualGradient(rhs)
+                    else:
+                        out['dc'+j]=dc(rhs,csm,mask,lam1)
     return out
