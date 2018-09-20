@@ -63,11 +63,11 @@ config.gpu_options.allow_growth=True
 
 #--------------------------------------------------------------
 #% SET THESE PARAMETERS CAREFULLY
-nLayers=3
-epochs=5
+nLayers=5
+epochs=100
 batchSize=4
 gradientMethod='AG'
-K=2
+K=1
 sigma=0.01
 
 #--------------------------------------------------------------------------
