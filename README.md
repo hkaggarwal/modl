@@ -50,7 +50,7 @@ Above link contain fully sampled preprocessed data in numpy format for both trai
 `trnOrg`: This is complex arrary of 256x232x360 containing 90 slices from each of the 4 training subjects. 
         Each slice is of  spatial dimension 256x232. This is the original fully sampled data.
         
-`trnCSM`: This is a complex array of 256x256x12x360 representing coil sensitity maps (csm). Here 12 represent number of coils.
+`trnCSM`: This is a complex array of 256x232x12x360 representing coil sensitity maps (csm). Here 12 represent number of coils.
 
 `trnMask`: This is the random undersampling mask to do 6-fold acceleration. We use different mask for different slices.
 
