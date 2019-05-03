@@ -21,6 +21,15 @@ This code solves the following optimization problem:
 
 `Dw(x)`: it represents the denoiser using a residual learning CNN.
 
+#### Recursive MoDL architecture:
+![alt text](https://github.com/hkaggarwal/modl/blob/master/MoDL_recursive.png)
+
+#### Main benefits of the MoDL:
+1. One of the first deep model that works with parallel MRI data.
+2. Can account for more general image forward models by using conjugate graident
+3. Needs less training data because of weight sharing across MoDL iterations.
+![alt text](https://github.com/hkaggarwal/modl/blob/master/model_benefits.png)
+
 
 #### Dependencies
 
