@@ -9,6 +9,8 @@ Link: https://arxiv.org/abs/1712.02862
 
 IEEE Xplore: https://ieeexplore.ieee.org/document/8434321/
 
+Presentation:  https://github.com/hkaggarwal/modl/blob/master/MoDL_ppt.pdf
+
 #### What this code do:
 In the above paper, we propose a technique to combine the power of deep-learning with the model-based approaches. This code suggest how we can use a deep convolutional neural netwrok (CNN) as a regularizer to solve an optimization problem.
 
