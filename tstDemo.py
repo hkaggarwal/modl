@@ -19,10 +19,10 @@ import supportingFunctions as sf
 cwd=os.getcwd()
 tf.reset_default_graph()
 
-#%% 'num' represent the slice number on which model is run
+#%% choose a model from savedModels directory
 
-subDirectory='14Mar_1105pm'
-#subDirectory='09Aug_0333pm_5L_1K_100E_MG'
+#subDirectory='14Mar_1105pm'
+subDirectory='04Jun_0356pm_5L_10K_50E_AG'
 #%%Read the testing data from dataset.hdf5 file
 
 #tstOrg is the original ground truth

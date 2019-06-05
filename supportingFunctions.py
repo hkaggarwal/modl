@@ -176,3 +176,88 @@ def c2r(inp):
     out[...,1]=inp.imag
     return out
 
+#%%
+def getWeights(wtsDir,chkPointNum='last'):
+    """
+    Input:
+        wtsDir: Full path of directory containing modelTst.meta
+        nLay: no. of convolution+BN+ReLu blocks in the model
+    output:
+        wt: numpy dictionary containing the weights. The keys names ae full
+        names of corersponding tensors in the model.
+    """
+    tf.reset_default_graph()
+    if chkPointNum=='last':
+        loadChkPoint=tf.train.latest_checkpoint(wtsDir)
+    else:
+        loadChkPoint=wtsDir+'/model'+chkPointNum
+    config = tf.ConfigProto()
+    config.gpu_options.allow_growth=True
+    with tf.Session(config=config) as s1:
+        saver = tf.train.import_meta_graph(wtsDir + '/modelTst.meta')
+        saver.restore(s1, loadChkPoint)
+        keys=[n.name+':0' for n in tf.get_default_graph().as_graph_def().node if "Variable" in n.op]
+        var=tf.global_variables()
+
+        wt={}
+        for key in keys:
+            va=[v for v in var if v.name==key][0]
+            wt[key]=s1.run(va)
+
+    tf.reset_default_graph()
+    return wt
+
+def assignWts(sess1,nLay,wts):
+    """
+    Input:
+        sess1: it is the current session in which to restore weights
+        nLay: no. of convolution+BN+ReLu blocks in the model
+        wts: numpy dictionary containing the weights
+    """
+
+    var=tf.global_variables()
+    #check lam and beta; these for for alternate strategy scalars
+
+    #check lamda 1
+    tfV=[v for v in var if 'lam1' in v.name and 'Adam' not in v.name]
+    npV=[v for v in wts.keys() if 'lam1' in v]
+    if len(tfV)!=0 and len(npV)!=0:
+        sess1.run(tfV[0].assign(wts[npV[0]] ))
+    #check lamda 2
+    tfV=[v for v in var if 'lam2' in v.name and 'Adam' not in v.name]
+    npV=[v for v in wts.keys() if 'lam2' in v]
+    if len(tfV)!=0 and len(npV)!=0:  #in single channel there is no lam2 so length is zero
+        sess1.run(tfV[0].assign(wts[npV[0]] ))
+
+    # assign W,b,beta gamma ,mean,variance
+    #for each layer at a time
+    for i in np.arange(1,nLay+1):
+        tfV=[v for v in var if 'conv'+str(i) +str('/') in v.name \
+             or 'Layer'+str(i)+str('/') in v.name and 'Adam' not in v.name]
+        npV=[v for v in wts.keys() if  ('Layer'+str(i))+str('/') in v or'conv'+str(i)+str('/') in v]
+        tfv2=[v for v in tfV if 'W:0' in v.name]
+        npv2=[v for v in npV if 'W:0' in v]
+        if len(tfv2)!=0 and len(npv2)!=0:
+            sess1.run(tfv2[0].assign(wts[npv2[0]]))
+        tfv2=[v for v in tfV if 'b:0' in v.name]
+        npv2=[v for v in npV if 'b:0' in v]
+        if len(tfv2)!=0 and len(npv2)!=0:
+            sess1.run(tfv2[0].assign(wts[npv2[0]]))
+        tfv2=[v for v in tfV if 'beta:0' in v.name]
+        npv2=[v for v in npV if 'beta:0' in v]
+        if len(tfv2)!=0 and len(npv2)!=0:
+            sess1.run(tfv2[0].assign(wts[npv2[0]]))
+        tfv2=[v for v in tfV if 'gamma:0' in v.name]
+        npv2=[v for v in npV if 'gamma:0' in v]
+        if len(tfv2)!=0 and len(npv2)!=0:
+            sess1.run(tfv2[0].assign(wts[npv2[0]]))
+        tfv2=[v for v in tfV if 'moving_mean:0' in v.name]
+        npv2=[v for v in npV if 'moving_mean:0' in v]
+        if len(tfv2)!=0 and len(npv2)!=0:
+            sess1.run(tfv2[0].assign(wts[npv2[0]]))
+        tfv2=[v for v in tfV if 'moving_variance:0' in v.name]
+        npv2=[v for v in npV if 'moving_variance:0' in v]
+        if len(tfv2)!=0 and len(npv2)!=0:
+            sess1.run(tfv2[0].assign(wts[npv2[0]]))
+    return sess1
+

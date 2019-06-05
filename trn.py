@@ -47,7 +47,7 @@ run the newly trained model on the test data.
 @author: Hemant Kumar Aggarwal
 """
 
-# import some libraries
+# import some librariesw
 import os,time
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 import numpy as np
@@ -64,12 +64,19 @@ config.gpu_options.allow_growth=True
 #--------------------------------------------------------------
 #% SET THESE PARAMETERS CAREFULLY
 nLayers=5
-epochs=100
-batchSize=4
+epochs=50
+batchSize=1
 gradientMethod='AG'
-K=1
+K=10
 sigma=0.01
+#%% to train the model with higher K values  (K>1) such as K=5 or 10,
+# it is better to initialize with a pre-trained model with K=1.
+if K>1:
+    restoreWeights=True
+    restoreFromModel='04Jun_0243pm_5L_1K_100E_AG'
 
+if restoreWeights:
+    wts=sf.getWeights('savedModels/'+restoreFromModel)
 #--------------------------------------------------------------------------
 #%%Generate a meaningful filename to save the trainined models for testing
 print ('*************************************************')
@@ -156,6 +163,8 @@ lossSumT = tf.summary.scalar("TrnLoss", lossT)
 
 with tf.Session(config=config) as sess:
     sess.run(tf.global_variables_initializer())
+    if restoreWeights:
+        sess=sf.assignWts(sess,nLayers,wts)
 
     feedDict={orgP:trnOrg,atbP:trnAtb, maskP:trnMask,csmP:trnCsm}
     sess.run(iterator.initializer,feed_dict=feedDict)
@@ -184,3 +193,4 @@ print ('training completed at', datetime.now().strftime("%d-%b-%Y %I:%M %P"))
 print ('*************************************************')
 
 #%%
+
