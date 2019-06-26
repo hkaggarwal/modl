@@ -81,6 +81,9 @@ Then you can run the test code using the command:
 #### Output:
 ![alt text](https://raw.githubusercontent.com/hkaggarwal/modl/master/outputImage.jpeg)
 
+#### Output on the Knee dataset with 10 iterations of alternating minimization as described in the MoDL paper:
+![knee results](https://github.com/hkaggarwal/modl/blob/master/KneeDataReconstruction.gif)
+
 You will need the file `dataset.hdf5` to run the training code `trn.py`. You can download the dataset from the link provided above. Please ignore the future warning by python.
 
 #### Files description
