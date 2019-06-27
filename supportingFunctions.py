@@ -55,6 +55,14 @@ def normalize01(img):
         #img2[i]=(img[i]-img[i].min())/(img[i].max()-img[i].min())
     return np.squeeze(img2).astype(img.dtype)
 
+#%%
+def np_crop(data, shape=(320,320)):
+
+    w_from = (data.shape[-2] - shape[0]) // 2
+    h_from = (data.shape[-1] - shape[1]) // 2
+    w_to = w_from + shape[0]
+    h_to = h_from + shape[1]
+    return data[..., w_from:w_to, h_from:h_to]
 
 #%%
 
