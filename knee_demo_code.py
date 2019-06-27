@@ -13,7 +13,7 @@ np.set_printoptions(precision=4,suppress=True)
 import tensorflow as tf
 import h5py as h5
 import supportingFunctions as sf
-from tqdm import tqdm
+
 tf.reset_default_graph()
 
 
@@ -44,7 +44,7 @@ with tf.Session(config=config) as sess:
     maskT   =graph.get_tensor_by_name('mask:0')
     atbT=graph.get_tensor_by_name('atb:0')
     csmT   =graph.get_tensor_by_name('csm:0')
-    for i in tqdm(range(nImg)):
+    for i in range(nImg):
         dataDict={atbT:tstAtb[[i]],maskT:tstMask[[i]],csmT:tstCsm[[i]] }
         tstRec[i]=sess.run(predT,feed_dict=dataDict)
 
