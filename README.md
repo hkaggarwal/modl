@@ -89,7 +89,7 @@ Just use the command `$python knee_demo_code.py` to see the performance of the M
 
 
 #### Output on the Brain data:
-![alt text](https://raw.githubusercontent.com/hkaggarwal/modl/master/output_brain.jpeg)
+![alt text](https://raw.githubusercontent.com/hkaggarwal/modl/master/output_brain.png)
 
 #### Output on the Knee data:
 The output GIF is showing the reconstructions from  10 iterations of alternating minimization as described in the MoDL paper.
