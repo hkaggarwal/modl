@@ -46,13 +46,15 @@ It can be installed using:
 
 In addition, matplotlib is required to visualize the output images.
 
-#### Dataset
+#### Brain Dataset
 
 This git repository also includes a single image in the file `demoImage.hdf5`. The testing script `tstDemo.py` will use this image by default and does not require full data download for the testing purpose.
 
 We have released the parallel imaging dataset used in this paper. You can download the full dataset from the below link:
 
  **Download Link** :  https://drive.google.com/file/d/1qp-l9kJbRfQU1W5wCjOQZi7I3T6jwA37/view?usp=sharing
+
+You will need the file `dataset.hdf5` to run the training code `trn.py`. You can download the dataset from the link provided above. Please ignore the future warning by python. You do not need to download the `dataset.hdf5` for testing purpose.
 
 
 This dataset consist of parallel magnetic resonance imaging (MRI) brain data of five human subjects. Four of which are used during training of the model and fifth subject is used during testing.
@@ -78,13 +80,21 @@ Then you can run the test code using the command:
 
 `$python tstDemo.py` from the command prompt. 
 
-#### Output:
+#### Knee Dataset
+`Download link:` https://app.globus.org/file-manager?origin_id=92ca2774-5225-11e8-9056-0a6d4e044368&origin_path=%2F
+The Knee data is made available by Dr. Florian Knoll from the NYU.
+
+The MoDL architecture can be trained using Knee dataset. The directory `knee_trained_MoDL` contains a trained model on Knee data. Here we performed the training with a structured mask that is kept same for all the slices during training. The file `knee_demo_data.h5` contains one raw image, mask, as we as coil sensitivity maps corresponding to a single slice from a particular subject for demo purpose only. 
+Just use the command `$python knee_demo_code.py` to see the performance of the MoDL on Knee dataset.
+
+
+#### Output on the Brain data:
 ![alt text](https://raw.githubusercontent.com/hkaggarwal/modl/master/outputImage.jpeg)
 
-#### Output on the Knee dataset with 10 iterations of alternating minimization as described in the MoDL paper:
+#### Output on the Knee data:
+The output GIF is showing the reconstructions from  10 iterations of alternating minimization as described in the MoDL paper.
 ![knee results](https://github.com/hkaggarwal/modl/blob/master/KneeDataReconstruction.gif)
 
-You will need the file `dataset.hdf5` to run the training code `trn.py`. You can download the dataset from the link provided above. Please ignore the future warning by python.
 
 #### Files description
 The folder `savedModels` contain the learned tensorflow model parameters. `tstDemo.py` will use it to read the model and run on the demo image in the file `demoImage.hdf5`. 
