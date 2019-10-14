@@ -88,7 +88,7 @@ Then you can run the test code using the command:
 `$python tstDemo.py` from the command prompt. 
 
 #### Knee Dataset
-`Download link:` https://app.globus.org/file-manager?origin_id=92ca2774-5225-11e8-9056-0a6d4e044368&origin_path=%2F
+`Download link:` https://app.globus.org/file-manager?origin_id=15c7de28-a76b-11e9-821c-02b7a92d8e58&origin_path=%2F
 The Knee data is made available by Dr. Florian Knoll from the NYU.
 
 The MoDL architecture can be trained using Knee dataset. The directory `knee_trained_MoDL` contains a trained model on Knee data. Here we performed the training with a structured mask that is kept same for all the slices during training. The file `knee_demo_data.h5` contains one raw image, mask, as we as coil sensitivity maps corresponding to a single slice from a particular subject for demo purpose only. 
