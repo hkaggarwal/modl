@@ -67,8 +67,9 @@ nLayers=5
 epochs=50
 batchSize=1
 gradientMethod='AG'
-K=10
+K=1
 sigma=0.01
+restoreWeights=False
 #%% to train the model with higher K values  (K>1) such as K=5 or 10,
 # it is better to initialize with a pre-trained model with K=1.
 if K>1:
