@@ -59,7 +59,7 @@ This git repository also includes a single image in the file `demoImage.hdf5`. T
 
 We have released the parallel imaging dataset used in this paper. You can download the full dataset from the below link:
 
- **Download Link** :  https://drive.google.com/file/d/1qp-l9kJbRfQU1W5wCjOQZi7I3T6jwA37/view?usp=sharing
+ **Download Link** :  https://zenodo.org/records/6481291
 
 You will need the file `dataset.hdf5` to run the training code `trn.py`. You can download the dataset from the link provided above. Please ignore the future warning by python. You do not need to download the `dataset.hdf5` for testing purpose.
 
