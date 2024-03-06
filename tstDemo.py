@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import supportingFunctions as sf
 
 cwd=os.getcwd()
-tf.reset_default_graph()
+tf.compat.v1.reset_default_graph()
 
 #%% choose a model from savedModels directory
 
@@ -41,19 +41,19 @@ print ('Now loading the model ...')
 modelDir= cwd+'/savedModels/'+subDirectory #complete path
 rec=np.empty(tstAtb.shape,dtype=np.complex64) #rec variable will have output
 
-tf.reset_default_graph()
+tf.compat.v1.reset_default_graph()
 loadChkPoint=tf.train.latest_checkpoint(modelDir)
-config = tf.ConfigProto()
+config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth=True
-with tf.Session(config=config) as sess:
-    new_saver = tf.train.import_meta_graph(modelDir+'/modelTst.meta')
+with tf.compat.v1.Session(config=config) as sess:
+    new_saver = tf.compat.v1.train.import_meta_graph(modelDir+'/modelTst.meta')
     new_saver.restore(sess, loadChkPoint)
-    graph = tf.get_default_graph()
+    graph = tf.compat.v1.get_default_graph()
     predT =graph.get_tensor_by_name('predTst:0')
     maskT =graph.get_tensor_by_name('mask:0')
     atbT=graph.get_tensor_by_name('atb:0')
     csmT   =graph.get_tensor_by_name('csm:0')
-    wts=sess.run(tf.global_variables())
+    wts=sess.run(tf.compat.v1.global_variables())
     dataDict={atbT:tstAtb,maskT:tstMask,csmT:tstCsm }
     rec=sess.run(predT,feed_dict=dataDict)
 
