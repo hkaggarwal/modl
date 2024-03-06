@@ -57,8 +57,8 @@ from tqdm import tqdm
 import supportingFunctions as sf
 import model as mm
 
-tf.reset_default_graph()
-config = tf.ConfigProto()
+tf.compat.v1.reset_default_graph()
+config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth=True
 
 #--------------------------------------------------------------
@@ -84,8 +84,7 @@ print ('*************************************************')
 start_time=time.time()
 saveDir='savedModels/'
 cwd=os.getcwd()
-directory=saveDir+datetime.now().strftime("%d%b_%I%M%P_")+ \
- str(nLayers)+'L_'+str(K)+'K_'+str(epochs)+'E_'+gradientMethod
+directory=saveDir
 
 if not os.path.exists(directory):
     os.makedirs(directory)
@@ -93,20 +92,22 @@ sessFileName= directory+'/model'
 
 
 #%% save test model
-tf.reset_default_graph()
+tf.compat.v1.reset_default_graph()
+tf.compat.v1.disable_eager_execution()
 
-csmT = tf.placeholder(tf.complex64,shape=(None,12,256,232),name='csm')
-maskT= tf.placeholder(tf.complex64,shape=(None,256,232),name='mask')
-atbT = tf.placeholder(tf.float32,shape=(None,256,232,2),name='atb')
+
+csmT = tf.compat.v1.placeholder(tf.compat.v1.complex64,shape=(None,12,256,232),name='csm')
+maskT= tf.compat.v1.placeholder(tf.compat.v1.complex64,shape=(None,256,232),name='mask')
+atbT = tf.compat.v1.placeholder(tf.compat.v1.float32,shape=(None,256,232,2),name='atb')
 
 out=mm.makeModel(atbT,csmT,maskT,False,nLayers,K,gradientMethod)
 predTst=out['dc'+str(K)]
-predTst=tf.identity(predTst,name='predTst')
+predTst=tf.compat.v1.identity(predTst,name='predTst')
 sessFileNameTst=directory+'/modelTst'
 
-saver=tf.train.Saver()
-with tf.Session(config=config) as sess:
-    sess.run(tf.global_variables_initializer())
+saver=tf.compat.v1.train.Saver()
+with tf.compat.v1.Session(config=config) as sess:
+    sess.run(tf.compat.v1.global_variables_initializer())
     savedFile=saver.save(sess, sessFileNameTst,latest_filename='checkpointTst')
 print ('testing model saved:' +savedFile)
 #%% read multi-channel dataset
@@ -114,11 +115,11 @@ trnOrg,trnAtb,trnCsm,trnMask=sf.getData('training')
 trnOrg,trnAtb=sf.c2r(trnOrg),sf.c2r(trnAtb)
 
 #%%
-tf.reset_default_graph()
-csmP = tf.placeholder(tf.complex64,shape=(None,None,None,None),name='csm')
-maskP= tf.placeholder(tf.complex64,shape=(None,None,None),name='mask')
-atbP = tf.placeholder(tf.float32,shape=(None,None,None,2),name='atb')
-orgP = tf.placeholder(tf.float32,shape=(None,None,None,2),name='org')
+tf.compat.v1.reset_default_graph()
+csmP = tf.compat.v1.placeholder(tf.compat.v1.complex64,shape=(None,None,None,None),name='csm')
+maskP= tf.compat.v1.placeholder(tf.compat.v1.complex64,shape=(None,None,None),name='mask')
+atbP = tf.compat.v1.placeholder(tf.compat.v1.float32,shape=(None,None,None,2),name='atb')
+orgP = tf.compat.v1.placeholder(tf.compat.v1.float32,shape=(None,None,None,2),name='org')
 
 
 #%% creating the dataset
@@ -126,7 +127,7 @@ nTrn=trnOrg.shape[0]
 nBatch= int(np.floor(np.float32(nTrn)/batchSize))
 nSteps= nBatch*epochs
 
-trnData = tf.data.Dataset.from_tensor_slices((orgP,atbP,csmP,maskP))
+trnData = tf.compat.v1.data.Dataset.from_tensor_slices((orgP,atbP,csmP,maskP))
 trnData = trnData.cache()
 trnData=trnData.repeat(count=epochs)
 trnData = trnData.shuffle(buffer_size=trnOrg.shape[0])
@@ -139,15 +140,15 @@ orgT,atbT,csmT,maskT = iterator.get_next('getNext')
 
 out=mm.makeModel(atbT,csmT,maskT,True,nLayers,K,gradientMethod)
 predT=out['dc'+str(K)]
-predT=tf.identity(predT,name='pred')
-loss = tf.reduce_mean(tf.reduce_sum(tf.pow(predT-orgT, 2),axis=0))
-tf.summary.scalar('loss', loss)
-update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+predT=tf.compat.v1.identity(predT,name='pred')
+loss = tf.compat.v1.reduce_mean(tf.compat.v1.reduce_sum(tf.compat.v1.pow(predT-orgT, 2),axis=0))
+tf.compat.v1.summary.scalar('loss', loss)
+update_ops = tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.UPDATE_OPS)
 
-with tf.name_scope('optimizer'):
-    optimizer = tf.train.AdamOptimizer()
+with tf.compat.v1.name_scope('optimizer'):
+    optimizer = tf.compat.v1.train.AdamOptimizer()
     gvs = optimizer.compute_gradients(loss)
-    capped_gvs = [(tf.clip_by_value(grad, -1., 1.), var) for grad, var in gvs]
+    capped_gvs = [(tf.compat.v1.clip_by_value(grad, -1., 1.), var) for grad, var in gvs]
     opToRun=optimizer.apply_gradients(capped_gvs)
 
 
@@ -157,13 +158,13 @@ with tf.name_scope('optimizer'):
 print ('training started at', datetime.now().strftime("%d-%b-%Y %I:%M %P"))
 print ('parameters are: Epochs:',epochs,' BS:',batchSize,'nSteps:',nSteps,'nSamples:',nTrn)
 
-saver = tf.train.Saver(max_to_keep=100)
+saver = tf.compat.v1.train.Saver(max_to_keep=100)
 totalLoss,ep=[],0
-lossT = tf.placeholder(tf.float32)
-lossSumT = tf.summary.scalar("TrnLoss", lossT)
+lossT = tf.compat.v1.placeholder(tf.float32)
+lossSumT = tf.compat.v1.summary.scalar("TrnLoss", lossT)
 
-with tf.Session(config=config) as sess:
-    sess.run(tf.global_variables_initializer())
+with tf.compat.v1.Session(config=config) as sess:
+    sess.run(tf.compat.v1.global_variables_initializer())
     if restoreWeights:
         sess=sf.assignWts(sess,nLayers,wts)
 
@@ -172,7 +173,7 @@ with tf.Session(config=config) as sess:
     savedFile=saver.save(sess, sessFileName)
     print("Model meta graph saved in::%s" % savedFile)
 
-    writer = tf.summary.FileWriter(directory, sess.graph)
+    writer = tf.compat.v1.summary.FileWriter(directory, sess.graph)
     for step in tqdm(range(nSteps)):
         try:
             tmp,_,_=sess.run([loss,update_ops,opToRun])
@@ -183,7 +184,7 @@ with tf.Session(config=config) as sess:
                 lossSum=sess.run(lossSumT,feed_dict={lossT:avgTrnLoss})
                 writer.add_summary(lossSum,ep)
                 totalLoss=[] #after each epoch empty the list of total loos
-        except tf.errors.OutOfRangeError:
+        except tf.compat.v1.errors.OutOfRangeError:
             break
     savedfile=saver.save(sess, sessFileName,global_step=ep,write_meta_graph=True)
     writer.close()

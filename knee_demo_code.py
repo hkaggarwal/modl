@@ -14,7 +14,7 @@ import tensorflow as tf
 import h5py as h5
 import supportingFunctions as sf
 
-tf.reset_default_graph()
+tf.compat.v1.reset_default_graph()
 
 
 modelDir='knee_trained_MoDL'
@@ -34,12 +34,12 @@ sf.toc()
 tstAtb=sf.c2r(tstAtb)
 nImg,nCoil,nRow,nCol=tstCsm.shape
 tstRec=np.empty(tstAtb.shape,dtype=np.float32)
-config = tf.ConfigProto()
+config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth=True
-with tf.Session(config=config) as sess:
-    new_saver = tf.train.import_meta_graph(modelDir+'/modelTst.meta')
+with tf.compat.v1.Session(config=config) as sess:
+    new_saver = tf.compat.v1.train.import_meta_graph(modelDir+'/modelTst.meta')
     new_saver.restore(sess, loadChkPoint)
-    graph = tf.get_default_graph()
+    graph = tf.compat.v1.get_default_graph()
     predT   =graph.get_tensor_by_name('predTst:0')
     maskT   =graph.get_tensor_by_name('mask:0')
     atbT=graph.get_tensor_by_name('atb:0')
