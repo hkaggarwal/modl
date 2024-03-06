@@ -16,7 +16,7 @@ TFeps=tf.constant(1e-5,dtype=tf.float32)
 
 
 # function c2r contatenate complex input as new axis two two real inputs
-c2r=lambda x:tf.stack([tf.real(x),tf.imag(x)],axis=-1)
+c2r=lambda x:tf.stack([tf.compat.v1.real(x),tf.compat.v1.imag(x)],axis=-1)
 #r2c takes the last dimension of real input and converts to complex
 r2c=lambda x:tf.complex(x[...,0],x[...,1])
 
@@ -26,9 +26,9 @@ def createLayer(x, szW, trainning,lastLayer):
     and ReLU. Last layer does not have ReLU to avoid truncating the negative
     part of the learned noise and alias patterns.
     """
-    W=tf.get_variable('W',shape=szW,initializer=tf.contrib.layers.xavier_initializer())
+    W=tf.compat.v1.get_variable('W',shape=szW,initializer=tf.keras.initializers.glorot_normal())
     x = tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
-    xbn=tf.layers.batch_normalization(x,training=trainning,fused=True,name='BN')
+    xbn=tf.compat.v1.layers.batch_normalization(x,training=trainning,fused=True,name='BN')
 
     if not(lastLayer):
         return tf.nn.relu(xbn)
@@ -54,7 +54,7 @@ def dw(inp,trainning,nLay):
     for i in np.arange(1,nLay+1):
         if i==nLay:
             lastLayer=True
-        with tf.variable_scope('Layer'+str(i)):
+        with tf.compat.v1.variable_scope('Layer'+str(i)):
             nw['c'+str(i)]=createLayer(nw['c'+str(i-1)],szW[i],trainning,lastLayer)
 
     with tf.name_scope('Residual'):
@@ -74,17 +74,17 @@ class Aclass:
             self.pixels=self.nrow*self.ncol
             self.mask=mask
             self.csm=csm
-            self.SF=tf.complex(tf.sqrt(tf.to_float(self.pixels) ),0.)
+            self.SF=tf.complex(tf.sqrt(tf.compat.v1.to_float(self.pixels) ),0.)
             self.lam=lam
             #self.cgIter=cgIter
             #self.tol=tol
     def myAtA(self,img):
         with tf.name_scope('AtA'):
             coilImages=self.csm*img
-            kspace=  tf.fft2d(coilImages)/self.SF
+            kspace=  tf.compat.v1.fft2d(coilImages)/self.SF
             temp=kspace*self.mask
-            coilImgs =tf.ifft2d(temp)*self.SF
-            coilComb= tf.reduce_sum(coilImgs*tf.conj(self.csm),axis=0)
+            coilImgs =tf.compat.v1.ifft2d(temp)*self.SF
+            coilComb= tf.reduce_sum(coilImgs*tf.compat.v1.conj(self.csm),axis=0)
             coilComb=coilComb+self.lam*img
         return coilComb
 
@@ -98,11 +98,11 @@ def myCG(A,rhs):
     def body(i,rTr,x,r,p):
         with tf.name_scope('cgBody'):
             Ap=A.myAtA(p)
-            alpha = rTr / tf.to_float(tf.reduce_sum(tf.conj(p)*Ap))
+            alpha = rTr / tf.compat.v1.to_float(tf.reduce_sum(tf.compat.v1.conj(p)*Ap))
             alpha=tf.complex(alpha,0.)
             x = x + alpha * p
             r = r - alpha * Ap
-            rTrNew = tf.to_float( tf.reduce_sum(tf.conj(r)*r))
+            rTrNew = tf.compat.v1.to_float( tf.reduce_sum(tf.compat.v1.conj(r)*r))
             beta = rTrNew / rTr
             beta=tf.complex(beta,0.)
             p = r + beta * p
@@ -110,7 +110,7 @@ def myCG(A,rhs):
 
     x=tf.zeros_like(rhs)
     i,r,p=0,rhs,rhs
-    rTr = tf.to_float( tf.reduce_sum(tf.conj(r)*r),)
+    rTr = tf.compat.v1.to_float( tf.reduce_sum(tf.compat.v1.conj(r)*r),)
     loopVar=i,rTr,x,r,p
     out=tf.while_loop(cond,body,loopVar,name='CGwhile',parallel_iterations=1)[2]
     return c2r(out)
@@ -119,8 +119,8 @@ def getLambda():
     """
     create a shared variable called lambda.
     """
-    with tf.variable_scope(tf.get_variable_scope(), reuse=tf.AUTO_REUSE):
-        lam = tf.get_variable(name='lam1', dtype=tf.float32, initializer=.05)
+    with tf.compat.v1.variable_scope(tf.compat.v1.get_variable_scope(), reuse=tf.compat.v1.AUTO_REUSE):
+        lam = tf.compat.v1.get_variable(name='lam1', dtype=tf.float32, initializer=.05)
     return lam
 
 def callCG(rhs):
@@ -179,7 +179,7 @@ def makeModel(atb,csm,mask,training,nLayers,K,gradientMethod):
     out={}
     out['dc0']=atb
     with tf.name_scope('myModel'):
-        with tf.variable_scope('Wts',reuse=tf.AUTO_REUSE):
+        with tf.compat.v1.variable_scope('Wts',reuse=tf.compat.v1.AUTO_REUSE):
             for i in range(1,K+1):
                 j=str(i)
                 out['dw'+j]=dw(out['dc'+str(i-1)],training,nLayers)

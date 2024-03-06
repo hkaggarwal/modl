@@ -22,7 +22,7 @@ tf.compat.v1.reset_default_graph()
 #%% choose a model from savedModels directory
 
 #subDirectory='14Mar_1105pm'
-subDirectory='04Jun_0356pm_5L_10K_50E_AG'
+subDirectory='04Jun_0243pm_5L_1K_100E_AG'
 #%%Read the testing data from dataset.hdf5 file
 
 #tstOrg is the original ground truth
@@ -42,7 +42,7 @@ modelDir= cwd+'/savedModels/'+subDirectory #complete path
 rec=np.empty(tstAtb.shape,dtype=np.complex64) #rec variable will have output
 
 tf.compat.v1.reset_default_graph()
-loadChkPoint=tf.train.latest_checkpoint(modelDir)
+loadChkPoint=tf.compat.v1.train.latest_checkpoint(modelDir)
 config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth=True
 with tf.compat.v1.Session(config=config) as sess:
